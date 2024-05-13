@@ -1,0 +1,42 @@
+[build-system]
+requires = [
+    "setuptools>=64.0"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gstripe"
+version = "1.0"
+authors = [
+    { name = "Michał Denkiewicz", email = "michal.denkiewicz@datascience.edu.pl" },
+]
+description = "Graph-based stripe caller using chromain interaction data."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {file = "LICENSE.txt"}
+keywords = ["stripes"]
+classifiers = [
+    "Private :: Do Not Upload",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License"
+]
+
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "igraph"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest"
+]
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]
+pythonpath = [
+  "src"
+]
