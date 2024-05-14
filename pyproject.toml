@@ -12,7 +12,7 @@ authors = [
 ]
 description = "Graph-based stripe caller using chromain interaction data."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = {file = "LICENSE.txt"}
 keywords = ["stripes"]
 classifiers = [
@@ -25,12 +25,17 @@ dependencies = [
     "numpy",
     "pandas",
     "scipy",
-    "igraph"
+    "igraph",
+    "matplotlib"
 ]
 
 [project.optional-dependencies]
 test = [
     "pytest"
+]
+stats = [    
+    "seabron",
+    "hic-straw"
 ]
 
 [tool.pytest.ini_options]

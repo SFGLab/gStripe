@@ -163,7 +163,7 @@ def normalize_contacts(bedpe_df: pd.DataFrame, sort_anchors_by='start') -> Tuple
         anchor_id_parts
     ])
 
-    anchors = anchors.stack(0)
+    anchors = anchors.stack(0, future_stack=True)
     anchors = anchors.drop_duplicates(subset=anchor_id_parts, keep='first')
     anchors = anchors[anchor_id_parts]  # reorder columns
     anchors['midpoint'] = (anchors.start + anchors.end) // 2

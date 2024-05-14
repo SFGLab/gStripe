@@ -217,7 +217,7 @@ class DataSources(object):
 
         dtypes = None
         unique_values = [set() for _ in names]  # TODO: inefficient?
-        for idx, gdf in df.groupby(by):
+        for idx, gdf in df.groupby(by, observed=True):
             if dtypes is None:
                 dtypes = [type(v) for v in idx]
             for i in range(len(names)):

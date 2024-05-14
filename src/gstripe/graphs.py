@@ -3,12 +3,11 @@ from __future__ import annotations
 from typing import Dict, Tuple
 from typing import Hashable
 
-import igraph
 import igraph as ig
 import numpy as np
 import pandas as pd
-from PandasRanges.ranges import RangeSeries, overlapping_clusters_grouped
 
+from .ranges import RangeSeries, overlapping_clusters_grouped
 from .utils import pandas_merge_threeway
 
 
@@ -82,7 +81,7 @@ class CreateGraph(object):
             self,
             anchors: pd.DataFrame,
             contacts: pd.DataFrame
-    ) -> Tuple[igraph.Graph, pd.DataFrame, pd.DataFrame]:
+    ) -> Tuple[ig.Graph, pd.DataFrame, pd.DataFrame]:
         nodes, anchors, contacts = self.create_nodes(anchors, contacts, self.anchors_data_aggregation)
         nodes = self.add_extra_nodes(nodes)
         edges, anchors, contacts = self.create_edges(anchors, contacts, self.contacts_data_aggregation)
@@ -114,7 +113,7 @@ class CreateGraph(object):
         data_agg = self._make_pandas_aggregation(
             anchors_data_aggregation, self.default_anchors_data_aggregation()
         )
-        nodes = anchors.groupby('node_id').agg(**data_agg)
+        nodes = anchors.groupby('node_id', observed=True).agg(**data_agg)
         nodes['midpoint'] = RangeSeries(nodes.start, nodes.end).center
         return nodes, anchors, contacts
 
@@ -134,7 +133,7 @@ class CreateGraph(object):
             contacts_data_aggregation, self.default_contacts_data_aggregation()
         )
         id_cols = ['node_id_A', 'node_id_B']
-        edges = merged_contacts.groupby(id_cols).agg(**data_agg).reset_index(id_cols)
+        edges = merged_contacts.groupby(id_cols, observed=True).agg(**data_agg).reset_index(id_cols)
         edges['is_contact'] = True
         edges['is_strand'] = False
         edges['weight'] = edges.total_petcount.astype(float)

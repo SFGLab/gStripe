@@ -3,14 +3,12 @@ import math
 from itertools import repeat
 from typing import Optional, Union, List, Tuple
 
-import gstripe.gstripe
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import hicstraw
-from PandasRanges.ranges import RangeSeries, overlapping_pairs_grouped, overlapping_clusters_grouped
 from matplotlib import ticker
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.gridspec import GridSpec
@@ -20,6 +18,8 @@ from matplotlib.patches import Rectangle
 from gstripe.gstripe import Stripe, GraphStripeCaller
 from gstripe.genomic_tools import Region
 from pandas import DataFrame, Series
+
+from .ranges import RangeSeries, overlapping_pairs_grouped
 
 JUICER_COORD_COLS = ['chr', 'pos1', 'pos2', 'chr2', 'pos3', 'pos4']
 
@@ -325,7 +325,7 @@ def count_overlaps(
 
     # Count sizes
     def _count(df, by, on, ids, suff):
-        count_df = df.groupby(add_suffix(by + on, suff))[ids].nunique().to_frame(add_suffix('n', suff)).copy()
+        count_df = df.groupby(add_suffix(by + on, suff), observed=False)[ids].nunique().to_frame(add_suffix('n', suff)).copy()
         count_df.index.names = add_suffix(count_df.index.names, suff)
         return count_df
 
@@ -333,7 +333,7 @@ def count_overlaps(
     counts_B = _count(df_B, by_B, ids_B, _B)
 
     by_AB = add_suffix(by_A, _A) + add_suffix(by_B, _B)
-    grouping = merged_df[merged_df[overlap_col] >= min_overlap].groupby(by_AB)
+    grouping = merged_df[merged_df[overlap_col] >= min_overlap].groupby(by_AB, observed=False)
 
     # Prepare result dataframe
     res = DataFrame({
@@ -365,14 +365,14 @@ def count_overlaps_single(
     # inner_on = as_list(inner_on)
     _A, _B = suffixes
 
-    counts = df.groupby(by + on)[ids].nunique()
+    counts = df.groupby(by + on, observed=False)[ids].nunique()
     counts_A = counts.to_frame(add_suffix('n', _A)).copy()
     counts_A.index.names = add_suffix(counts_A.index.names, _A)
     counts_B = counts.to_frame(add_suffix('n', _B)).copy()
     counts_B.index.names = add_suffix(counts_B.index.names, _B)
 
     by_AB = add_suffix(on + by, _A) + add_suffix(on + by, _B)
-    grouping = merged_df[merged_df[overlap_col] >= min_overlap].groupby(by_AB)
+    grouping = merged_df[merged_df[overlap_col] >= min_overlap].groupby(by_AB, observed=False)
 
     # Prepare result dataframe
     res = DataFrame({
@@ -496,7 +496,7 @@ def mapping_heatmap(
             np.fill_diagonal(data.values, np.nan)
         else:
             grps = add_suffix(on_A[0] if len(on_A) == 1 else on_A, _A)
-            for grp_idx, _ in data.groupby(grps):
+            for grp_idx, _ in data.groupby(grps, observed=False):
                 np.fill_diagonal(data.loc[grp_idx].values, np.nan)
     sns.heatmap(
         data,
@@ -567,7 +567,7 @@ def compare_striping_domains_single(
     sdf0, sr0 = stripe_regions(stripes, coord_cols=cc)
     sdf0 = sdf0.sort_values(on + inner_on + cc)
     sr0 = sr0(sdf0)    
-    sr = sr0.groupby(by + on + inner_on).union_self()
+    sr = sr0.groupby(by + on + inner_on, observed=False).union_self()
     new_index = pd.MultiIndex.from_frame(
         sr.index.to_frame(index=False).rename_axis(ids).reset_index())
     sr = sr.set_index(new_index)

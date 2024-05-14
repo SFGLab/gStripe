@@ -18,10 +18,10 @@ from typing import List, Iterable, Tuple, Dict, Any, Union, Optional
 import igraph as ig
 import numpy as np
 import pandas as pd
-from PandasRanges.ranges import RangeSeries
 from matplotlib import pyplot as plt
 from numpy.random import default_rng
 
+from .ranges import RangeSeries
 from .graphs import CreateGraph, ClusterOverlappingAnchors
 from .task import TaskRunner, Timer, Task, MessagePrinter
 from .utils import add_argparse_args, from_argparse_args, LOG_LEVELS
@@ -113,7 +113,7 @@ def create_chromosome_graphs(bedpe_df: pd.DataFrame, anchor_expansion: int) -> T
         anchor_clustering=ClusterOverlappingAnchors(expand_by=anchor_expansion, expand_from_midpoint=False),
         remove_loops=True
     )
-    for raw_label, chrom_df in bedpe_df.groupby('chromosome_A'):
+    for raw_label, chrom_df in bedpe_df.groupby('chromosome_A', observed=True):
         anchors, contacts = normalize_contacts(chrom_df)
         graph, *_ = graph_creator(anchors, contacts)
         yield raw_label, graph
