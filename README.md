@@ -16,7 +16,7 @@ Graph-based stripe caller that uses chromatin loop data.
 
 ## Usage
 
-Run `python -m -m gstripe.gstripe input_loops_file.bedpe output_directory` to call the stripes using loops from _input_loops_file.bedpe_ and place the results and statistics in _output_directory_.
+Run `python -m gstripe.gstripe input_loops_file.bedpe output_directory` to call the stripes using loops from _input_loops_file.bedpe_ and place the results and statistics in _output_directory_.
 This results in saving the candidate stripes to the output directory in a `.tsv` file. They should then be filtered by the user.
 
 It is recommended to use the default values of all parameters specified in usage options (`python -m gstripe.gstripe --help`).
