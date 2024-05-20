@@ -1,11 +1,18 @@
 # gSTRIPE
 
-Graph-based stripe caller using chromatin interaction data.
+Graph-based stripe caller that uses chromatin loop data.
+
+## Requirements:
+
+* Python 3.10
+* Operating system: Linux *(Ubuntu 18.04 or higher, recommended)* or Windows 10 *(or higher)*.
 
 ## Installation
 
-1. _[Optional, but recommended]_ Set up a pyenv, conda or mamba python environment, and activate it.
-2. Run `pip install git+https://github.com/SFGLab/gStripe.git` to install the gStripe package.
+1. *Optional, but recommended*: Create and activate a python envrionment using [pyenv](https://github.com/pyenv/pyenv), [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) or [Mamba](https://mamba.readthedocs.io/en/latest/index.html).
+2. Install gStripe, depending on the chosen source:
+  * Installing directly from github: run `pip install git+https://github.com/SFGLab/gStripe.git`.
+  * Installing from a zip file: run `pip install gstripe.zip` in the directory containing the downloaded file (The name of the file might differ, depending on the download source).
 
 ## Usage
 
