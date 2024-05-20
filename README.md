@@ -12,7 +12,7 @@ Graph-based stripe caller that uses chromatin loop data.
 1. *Optional, but recommended*: Create and activate a python envrionment using [pyenv](https://github.com/pyenv/pyenv), [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) or [Mamba](https://mamba.readthedocs.io/en/latest/index.html).
 2. Install gStripe, depending on the chosen source:
     * Installing directly from github: run `pip install git+https://github.com/SFGLab/gStripe.git`.
-    * Installing from a zip file: run `pip install gstripe.zip` in the directory containing the downloaded file (The name of the file might differ, depending on the download source).
+    * Installing from a zip file: run `pip install gStripe-v1.0.zip` in the directory containing the downloaded file. The name of the `.zip` archive might differ, depending on the download source and version number.
 
 To verify, that the installation proceeded correctly, you can do the following:
 1. Run `python -m gstripe.gstripe --help`: you should see the help message. If not, check if the correct environment has been activated.
