@@ -485,6 +485,8 @@ class GraphStripeCaller(Task):
     stripe_gap_threshold: float = 0.0
     stripe_score_holder_exponent: float = 2.0
     describe_percentiles = (0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99)
+    merge_stripes_threshold: int = 0
+    max_merged_stripe_width: int = 80_000
 
     # Features
     _f_length = None
@@ -786,7 +788,7 @@ class GraphStripeCaller(Task):
             filtered_stripes.append(s)
         return filtered_stripes
 
-    def refine_stripes(self, all_stripes, merge_threshold=0, max_length_diff=200_000):
+    def refine_stripes(self, all_stripes, max_length_diff=200_000):
         right_stripes = [s for s in all_stripes if s.direction == 'R']
         left_stripes = [s for s in all_stripes if s.direction == 'L']
         new_stripes = []
@@ -796,7 +798,9 @@ class GraphStripeCaller(Task):
                 if prev and prev.chromosome != s.chromosome:
                     prev = None
                 if prev:
-                    if s.anchor_start - prev.anchor_end <= merge_threshold and abs(s.length - prev.length) < max_length_diff:
+                    if prev.anchor_end - s.anchor_start <= self.merge_stripes_threshold \
+                        and s.anchor_end - prev.anchor_start <= self.max_merged_stripe_width \
+                        and abs(s.length - prev.length) <= max_length_diff:
                         prev = prev.merge(s)
                     else:
                         new_stripes.append(prev)
